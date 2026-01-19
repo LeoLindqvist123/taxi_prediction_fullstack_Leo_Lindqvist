@@ -7,7 +7,14 @@ authors = [
     { name = "LeoLindqvist123", email = "leolikro01@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = []
+dependencies = [   
+    "pandas",
+    "numpy", 
+    "matplotlib",
+    "seaborn",
+    "scikit-learn",
+    "joblib",
+]
 
 [project.scripts]
 taxipred = "taxipred:main"
