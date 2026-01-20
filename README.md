@@ -2,13 +2,6 @@
 
 Fullstack ML application for predicting taxi prices.
 
-## Technologies
-
-ML: scikit-learn, pandas  
-Backend: FastAPI  
-Frontend: Streamlit  
-Package Manager: uv
-
 ## Installation
 ```bash
 git clone https://github.com/LeoLindqvist123/taxi-prediction-fullstack-Leo_Lindqvist.git
@@ -32,11 +25,6 @@ cd frontend
 streamlit run app.py
 ```
 
-## API Endpoints
-
-GET /api/taxi/v1 - Returns all taxi data  
-POST /api/taxi/v1/predict - Predicts taxi price
-
 ## Screenshots
 
 ![Streamlit Application](images/streamlit_home.png)
@@ -50,5 +38,5 @@ R² Score: 0.906
 
 ## Author
 
-Leo Lindqvist    
+Leo Lindqvist  
 January 2026
