@@ -7,13 +7,15 @@ authors = [
     { name = "LeoLindqvist123", email = "leolikro01@gmail.com" }
 ]
 requires-python = ">=3.14"
-dependencies = [   
+dependencies = [
     "pandas",
-    "numpy", 
+    "numpy",
     "matplotlib",
     "seaborn",
     "scikit-learn",
     "joblib",
+    "streamlit>=1.53.0",
+    "uvicorn>=0.40.0",
 ]
 
 [project.scripts]
