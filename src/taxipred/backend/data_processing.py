@@ -1,9 +1,6 @@
-import json
-from taxipred.utils.constants import DATA_PATCH
+"""
+Data processing utilities for backend.
 
-def read_json():
-
-  with open (DATA_PATCH / model.joblib, "r") as file:
-    data = json.load(file)
-
-  return data
+Currently not used - all data processing is handled directly in api.py.
+This file is reserved for future utility functions.
+"""

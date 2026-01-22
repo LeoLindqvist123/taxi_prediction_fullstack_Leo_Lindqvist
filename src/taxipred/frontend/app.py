@@ -1,81 +1,86 @@
-# Have used chatgpt for my frontend to understand better and have nicer look 
+# Have used chatgpt for my frontend to understand better and have nicer look. 
 
 import streamlit as st
 import requests
-import pandas as pd
+import folium
+from streamlit_folium import st_folium
+from geopy.geocoders import Nominatim
+import time
 
 st.set_page_config(page_title="Taxi Price Predictor", page_icon="🚕")
 
 API_URL = "http://127.0.0.1:8000/api/taxi/v1"
 
 st.title("🚕 Taxi Price Predictor")
-st.write("Predicera taxipriser baserat på resedetaljer")
 
-st.sidebar.header("Rese-information")
+st.sidebar.header("Reseinformation")
+start = st.sidebar.text_input("Start", "Stockholm Central")
+slut = st.sidebar.text_input("Slut", "Arlanda")
+passengers = st.sidebar.slider("Passagerare", 1, 8, 2)
 
-trip_distance = st.sidebar.number_input("Avstånd (km)", min_value=0.1, max_value=100.0, value=10.0, step=0.1)
-time_of_day = st.sidebar.selectbox("Tid på dagen", ["Morning", "Afternoon", "Evening", "Night"])
-day_of_week = st.sidebar.selectbox("Veckodag", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
-passenger_count = st.sidebar.slider("Antal passagerare", 1, 8, 2)
-traffic_conditions = st.sidebar.selectbox("Trafik", ["Light", "Medium", "Heavy"])
-weather = st.sidebar.selectbox("Väder", ["Clear", "Rainy", "Cloudy", "Snowy"])
-base_fare = st.sidebar.number_input("Baspris", min_value=0.0, value=50.0, step=1.0)
-per_km_rate = st.sidebar.number_input("Pris per km", min_value=0.0, value=10.0, step=0.5)
-per_minute_rate = st.sidebar.number_input("Pris per minut", min_value=0.0, value=2.0, step=0.1)
-trip_duration = st.sidebar.number_input("Restid (minuter)", min_value=0.1, value=25.0, step=0.5)
+if st.sidebar.button("Beräkna", type="primary"):
+    st.session_state['run_calculation'] = True
 
-if st.sidebar.button("Predicera Pris", type="primary"):
-
-    payload = {
-        "Trip_Distance_km": trip_distance,
-        "Time_of_Day": time_of_day,
-        "Day_of_Week": day_of_week,
-        "Passenger_Count": passenger_count,
-        "traffic_conditions": traffic_conditions,
-        "Weather": weather,
-        "Base_Fare": base_fare,
-        "Per_Km_Rate": per_km_rate,
-        "Per_Minute_Rate": per_minute_rate,
-        "Trip_Duration_Minutes": trip_duration
-    }
+if 'run_calculation' in st.session_state and st.session_state['run_calculation']:
     
-    try:
-        response = requests.post(f"{API_URL}/predict", json=payload)
-        
-        if response.status_code == 200:
-            result = response.json()
-            predicted_price = result["predicted_price"]
-            
-            st.success(f"💰 Predicerat pris: **{predicted_price:.2f} kr**")
-            
-            st.subheader("Resedetaljer")
-            col1, col2 = st.columns(2)
-            
-            with col1:
-                st.metric("Avstånd", f"{trip_distance} km")
-                st.metric("Passagerare", passenger_count)
-                st.metric("Restid", f"{trip_duration} min")
-            
-            with col2:
-                st.metric("Tid", time_of_day)
-                st.metric("Trafik", traffic_conditions)
-                st.metric("Väder", weather)
-        else:
-            st.error(f"Fel: {response.status_code} - {response.text}")
-    
-    except Exception as e:
-        st.error(f"Kunde inte ansluta till API: {e}")
-        st.info("Se till att FastAPI-servern körs på http://127.0.0.1:8000")
+        with st.spinner("Beräknar..."):
 
-st.divider()
-if st.checkbox("Visa all taxi-data"):
-    try:
-        response = requests.get(API_URL)
-        if response.status_code == 200:
-            data = response.json()
-            df = pd.DataFrame(data)
-            st.dataframe(df, use_container_width=True)
-        else:
-            st.error("Kunde inte hämta data")
-    except Exception as e:
-        st.error(f"Fel: {e}")
+            geo = Nominatim(user_agent="taxi", timeout=10)
+            start_loc = geo.geocode(start)
+            time.sleep(1) 
+            slut_loc = geo.geocode(slut)
+            
+            if not start_loc or not slut_loc:
+                    st.error("Kunde inte hitta adresserna")
+            else:
+                    st.subheader("Rutt")
+                    m = folium.Map(
+                        location=[(start_loc.latitude + slut_loc.latitude)/2, 
+                                  (start_loc.longitude + slut_loc.longitude)/2], 
+                        zoom_start=10
+                    )
+                    folium.Marker([start_loc.latitude, start_loc.longitude], 
+                                 popup="Start", icon=folium.Icon(color='green')).add_to(m)
+                    folium.Marker([slut_loc.latitude, slut_loc.longitude], 
+                                 popup="Slut", icon=folium.Icon(color='red')).add_to(m)
+                    st_folium(m, width=700, height=400)
+
+                    from math import radians, cos, sin, asin, sqrt
+                    
+                    lat1 = radians(start_loc.latitude)
+                    lon1 = radians(start_loc.longitude)
+                    lat2 = radians(slut_loc.latitude)
+                    lon2 = radians(slut_loc.longitude)
+                    
+                    dlat = lat2 - lat1
+                    dlon = lon2 - lon1
+                    a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
+                    c = 2 * asin(sqrt(a))
+                    dist = 6371 * c
+                    
+                    tid = dist / 60 * 60
+                    
+                    col1, col2 = st.columns(2)
+                    col1.metric("Avstånd", f"{dist:.1f} km")
+                    col2.metric("Tid", f"{tid:.0f} min")
+                    
+                    payload = {
+                        "Trip_Distance_km": dist,
+                        "Time_of_Day": "Morning",
+                        "Day_of_Week": "Monday",
+                        "Passenger_Count": passengers,
+                        "traffic_conditions": "Medium",
+                        "Weather": "Clear",
+                        "Base_Fare": 50.0,
+                        "Per_Km_Rate": 10.0,
+                        "Per_Minute_Rate": 2.0,
+                        "Trip_Duration_Minutes": tid
+                    }
+                    
+                    response = requests.post(f"{API_URL}/predict", json=payload)
+                    
+                    if response.status_code == 200:
+                        pris = response.json()["predicted_price"]
+                        st.success(f"## Pris: {pris:.2f} kr")
+                    else:
+                        st.error("Kunde inte beräkna pris")
