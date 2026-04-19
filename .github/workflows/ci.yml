@@ -1,0 +1,24 @@
+name: ML-ci
+
+on:
+  push:
+    branches: 
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: |
+          pip install fastapi uvicorn pandas numpy scikit-learn joblib streamlit requests folium streamlit-folium geopy'
+      
+      - name: build docker images
+        run: docker compose build
