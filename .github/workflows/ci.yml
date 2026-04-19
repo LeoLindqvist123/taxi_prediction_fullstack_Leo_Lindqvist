@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install dependencies
-        run: pip install fastapi uvicorn pandas numpy scikit-learn joblib streamlit requests folium streamlit-folium geopy'
+        run: pip install fastapi uvicorn pandas numpy scikit-learn joblib streamlit requests folium streamlit-folium geopy
       
       - name: build docker images
         run: docker compose build
