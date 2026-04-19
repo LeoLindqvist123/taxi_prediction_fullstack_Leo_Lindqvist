@@ -6,10 +6,11 @@ import folium
 from streamlit_folium import st_folium
 from geopy.geocoders import Nominatim
 import time
+import os
 
 st.set_page_config(page_title="Taxi Price Predictor", page_icon="🚕")
 
-API_URL = "http://127.0.0.1:8000/api/taxi/v1"
+API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000") + "/api/taxi/v1"
 
 st.title("🚕 Taxi Price Predictor")
 
@@ -52,6 +53,7 @@ if 'run_calculation' in st.session_state and st.session_state['run_calculation']
                     lat2 = radians(slut_loc.latitude)
                     lon2 = radians(slut_loc.longitude)
                     
+                    #ChatGPT for this part 
                     dlat = lat2 - lat1
                     dlon = lon2 - lon1
                     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
@@ -63,8 +65,10 @@ if 'run_calculation' in st.session_state and st.session_state['run_calculation']
                     col1, col2 = st.columns(2)
                     col1.metric("Avstånd", f"{dist:.1f} km")
                     col2.metric("Tid", f"{tid:.0f} min")
-                    
+                    # end
                     payload = {
+
+                        
                         "Trip_Distance_km": dist,
                         "Time_of_Day": "Morning",
                         "Day_of_Week": "Monday",

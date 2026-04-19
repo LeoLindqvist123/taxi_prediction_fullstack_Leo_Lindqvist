@@ -16,6 +16,11 @@ dependencies = [
     "joblib",
     "streamlit>=1.53.0",
     "uvicorn>=0.40.0",
+    "fastapi>=0.100.0",
+    "geopy>=2.0.0",
+    "folium>=0.14.0",
+    "streamlit-folium>=0.15.0",
+    "requests>=2.28.0",
 ]
 
 [project.scripts]
@@ -28,4 +33,5 @@ build-backend = "uv_build"
 [tool.uv.workspace]
 members = [
     "taxipred",
+    "src/taxipred/frontend",
 ]
