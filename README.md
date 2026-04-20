@@ -27,10 +27,10 @@ A full-stack ML application that predicts taxi prices based on distance, passeng
 | **Random Forest** | **3.94 kr** | **0.95** |
 
 ## Model Selection
-Two models were evaluated using MLflow experiment tracking — Random Forest (MAE: 3.94, R²: 0.95) 
+Two models were evaluated using MLflow experiment tracking Random Forest (MAE: 3.94, R²: 0.95) 
 and Linear Regression (MAE: 5.60, R²: 0.91). Despite Random Forest having slightly better metrics, 
 Linear Regression was chosen for production as it produced more realistic price predictions 
-closer to real-world taxi fares, with no significant difference in accuracy.
+closer to real-world taxi prices, with no significant difference in accuracy.
 
 ## Run with Docker
 
