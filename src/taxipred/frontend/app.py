@@ -10,6 +10,8 @@ import os
 
 st.set_page_config(page_title="Taxi Price Predictor", page_icon="🚕")
 
+st.set
+
 API_URL = os.environ.get("API_URL", "http://127.0.0.1:8000") + "/api/taxi/v1"
 
 st.title("🚕 Taxi Price Predictor")
