@@ -63,4 +63,4 @@ Parts of the frontend and geocoding logic were developed with the assistance of 
 (ChatGPT/Claude) to better understand and implement new concepts.
 
 ## Author
-Leo Lindqvist
+Leo Lindqvist Kröhnert
