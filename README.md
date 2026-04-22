@@ -36,15 +36,27 @@ closer to real-world taxi prices, with no significant difference in accuracy.
 
 Correlation
 
-The heatmap reveals which features have the strongest influence on Trip_Price. Trip_Distance_km and Trip_Duration_Minutes show the highest correlation with price, which aligns with how taxi pricing typically works — longer and slower trips cost more. Features like Passenger_Count show little to no correlation, suggesting it has minimal impact on the final price.
+Trip_Distance_km has by far the strongest correlation with Trip_Price (0.86), meaning distance is the dominant factor in determining the fare. Per_Km_Rate shows a moderate correlation (0.28), followed by Trip_Duration_Minutes (0.22) and Per_Minute_Rate (0.11). Features like Passenger_Count and Base_Fare have almost no correlation with price, suggesting they contribute very little to the final fare.
 
 ![Streamlit Application](images/Correlation_heatmap.png)
 
 Price by Time of Day & Weather
 
-Prices tend to vary slightly depending on the time of day, with evening and night trips showing a wider spread. Weather conditions such as rain and snow appear to push prices slightly higher compared to clear conditions, likely due to increased demand or slower traffic. These categorical features were included in the model to capture these patterns.
+The median price is consistent across all times of day (Afternoon, Evening, Morning, Night), hovering around 50. The spread and outliers are similar across all categories, suggesting that time of day has little impact on price. Similarly, weather conditions (Clear, Rain, Snow) show no meaningful difference in median price or distribution, indicating that weather alone does not significantly affect the fare in this dataset.
 
 ![Streamlit Application](images/price_v_day_v_weather.png)
+
+Price Distribution
+
+The majority of trips are priced between 20 and 80, with the distribution peaking around 40 - 60. The distribution is right-skewed, with a small number of high-value outliers ranging up to ~332. This suggests that most trips are short to medium distance, with occasional long-distance trips driving up the tail.
+
+![Streamlit Application](images/price_distribution.png)
+
+Price vs Distance
+
+The scatter plot confirms the strong correlation (0.86) seen in the heatmap. There is a clear positive linear relationship between distance and price for trips up to ~50 km. Notably, there is a visible gap in the data between ~50 - 100 km, followed by a cluster of high-price trips at 100 - 150 km. This could indicate two distinct trip types in the dataset — local city trips and longer intercity trips.
+
+![Streamlit Application](images/price_v_distance.png)
 
 ## Run with Docker
 
