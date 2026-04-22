@@ -23,19 +23,19 @@ def geocode(address):
     return None, None
 
 st.title("🚕 Taxi Price Predictor")
-st.caption("Ange start- och slutdestination för att få ett prisestimat.")
+st.caption("Enter your starting and ending destination to get a price estimate..")
 st.divider()
 
-st.sidebar.header("🗺️ Reseinformation")
-start = st.sidebar.text_input("Startadress", "Stockholm Central")
-slut = st.sidebar.text_input("Slutadress", "Arlanda")
-passengers = st.sidebar.slider("Antal passagerare", 1, 8, 2)
+st.sidebar.header("🗺️ Travel information")
+start = st.sidebar.text_input("Start address", "Stockholm Central")
+slut = st.sidebar.text_input("Final address", "Arlanda")
+passengers = st.sidebar.slider("Passanges", 1, 8, 2)
 
 st.sidebar.header("⚙️ Resedetaljer")
-time_of_day = st.sidebar.selectbox("Tid på dagen", ["Morning", "Afternoon", "Evening", "Night"])
-day_of_week = st.sidebar.selectbox("Dag", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
-weather = st.sidebar.selectbox("Väder", ["Clear", "Rainy", "Snowy", "Foggy"])
-traffic = st.sidebar.selectbox("Trafik", ["Low", "Medium", "High"])
+time_of_day = st.sidebar.selectbox("Time of the day", ["Morning", "Afternoon", "Evening", "Night"])
+day_of_week = st.sidebar.selectbox("Day", ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+weather = st.sidebar.selectbox("Weather", ["Clear", "Rainy", "Snowy", "Foggy"])
+traffic = st.sidebar.selectbox("Trafic", ["Low", "Medium", "High"])
 
 calculate = st.sidebar.button("🚕 Beräkna pris", type="primary", use_container_width=True)
 
@@ -51,7 +51,7 @@ if 'run_calculation' in st.session_state and st.session_state['run_calculation']
         slut_lat, slut_lon = geocode(slut)
 
         if not start_lat or not slut_lat:
-            st.error("❌ Kunde inte hitta en eller båda adresserna.")
+            st.error("❌ Could not find one or both addresses.")
         else:
             col_map, col_info = st.columns([2, 1])
 
@@ -106,13 +106,13 @@ if 'run_calculation' in st.session_state and st.session_state['run_calculation']
 
                     if response.status_code == 200:
                         pris = response.json()["predicted_price"]
-                        st.success("### 💰 Estimerat pris")
+                        st.success("### 💰 Estimated price")
                         st.metric("Pris", f"{pris:.2f} kr")
                     else:
-                        st.error(f"❌ Backend fel: {response.status_code} - {response.text}")
+                        st.error(f"❌ Backend error: {response.status_code} - {response.text}")
 
                 except Exception as e:
-                    st.error(f"❌ Kunde inte nå backend: {e}")
+                    st.error(f"❌ Could not reach backend: {e}")
 
     except Exception as e:
-        st.error(f"❌ Fel: {e}")
+        st.error(f"❌ Error: {e}")
