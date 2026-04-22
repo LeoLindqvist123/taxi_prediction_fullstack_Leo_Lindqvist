@@ -32,6 +32,20 @@ and Linear Regression (MAE: 5.60, R²: 0.91). Despite Random Forest having sligh
 Linear Regression was chosen for production as it produced more realistic price predictions 
 closer to real-world taxi prices, with no significant difference in accuracy.
 
+## Exploratory Data Analysis
+
+Correlation
+
+The heatmap reveals which features have the strongest influence on Trip_Price. Trip_Distance_km and Trip_Duration_Minutes show the highest correlation with price, which aligns with how taxi pricing typically works — longer and slower trips cost more. Features like Passenger_Count show little to no correlation, suggesting it has minimal impact on the final price.
+
+![Streamlit Application](images/Correlation_heatmap.png)
+
+Price by Time of Day & Weather
+
+Prices tend to vary slightly depending on the time of day, with evening and night trips showing a wider spread. Weather conditions such as rain and snow appear to push prices slightly higher compared to clear conditions, likely due to increased demand or slower traffic. These categorical features were included in the model to capture these patterns.
+
+![Streamlit Application](images/price_v_day_v_weather.png)
+
 ## Run with Docker
 
 ```bash
